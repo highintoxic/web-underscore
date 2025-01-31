@@ -73,7 +73,7 @@ const NavBar = () => {
 							aria-haspopup='true'
 							aria-expanded={isMenuOpen}
 						>
-							<User className='h-5 w-5 text-white' />
+							<User className='h-5 w-5 text-white hover:cursor-pointer' />
 						</button>
 						{isMenuOpen && (
 							<div
