@@ -1,11 +1,10 @@
-
-
-function App() {
-  
+import { Routes, Route } from "react-router"
+import { Home } from "./Pages"
+const App = () => {
   return (
-    <>
-      <p className=" text-4xl text-blue-900" >hellow</p>
-    </>
+    <Routes>
+      <Route index element={<Home />} />
+    </Routes>
   )
 }
 
