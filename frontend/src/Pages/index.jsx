@@ -4,4 +4,5 @@ import SignUp from "./signup";
 import NotFound from "./404";
 import DiseaseSlider from "./awareness";
 import HealthCalculator from "./healthcalculator";
-export { Home, SignIn, SignUp, NotFound,DiseaseSlider,HealthCalculator};
+import CommunityForum from "./community";
+export { Home, SignIn, SignUp, NotFound,DiseaseSlider,HealthCalculator,CommunityForum};

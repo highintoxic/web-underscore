@@ -51,8 +51,8 @@ const NavBar = () => {
 			<Link to="/awareness" className="text-white hover:text-white/80 transition-colors">
 				Awareness
 			</Link>
-			<Link to="#" className="text-white hover:text-white/80 transition-colors">
-				Contact
+			<Link to="/communityforum" className="text-white hover:text-white/80 transition-colors">
+				Community
 			</Link>
 		</div>
 
