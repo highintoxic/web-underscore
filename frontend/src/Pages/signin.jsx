@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+
 import BaseLayout from "../Layouts/BaseLayout";
 import api from "../utils/api";
 export default function SignIn() {

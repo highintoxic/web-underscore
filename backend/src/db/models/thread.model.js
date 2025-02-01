@@ -37,8 +37,7 @@ const ThreadSchema = new mongoose.Schema({
 		maxlength: 1000,
 	},
 	author: {
-		type: mongoose.Schema.Types.ObjectId,
-		ref: "User",
+		type: String,
 		required: true,
 	},
 	replies: {
