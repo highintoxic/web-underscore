@@ -1,8 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { User, Menu, X } from "lucide-react";
 import { Link } from "react-router";
-import SignIn from "../Pages/signin";
-import SignUp from "../Pages/signup";
+
 const NavBar = () => {
 	const [isOpen, setIsOpen] = useState(false);
 	const [isMenuOpen, setIsMenuOpen] = useState(false);
