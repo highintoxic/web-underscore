@@ -12,7 +12,7 @@ import {
   Send,
 } from "lucide-react"
 import { BaseLayout } from "../Layouts"
-const THREADS_PER_PAGE = 10;
+const THREADS_PER_PAGE = 10
 
 const CommunityForum = () => {
   const [threads, setThreads] = useState([
@@ -162,6 +162,29 @@ const CommunityForum = () => {
     }
   }
 
+  const handleAddReply = (threadId, replyContent) => {
+    setThreads(
+      threads.map((thread) =>
+        thread.id === threadId
+          ? {
+              ...thread,
+              replies: [
+                ...thread.replies,
+                {
+                  id: Date.now(),
+                  author: "CurrentUser", // Replace with actual current user's name
+                  content: replyContent,
+                  likes: 0,
+                },
+              ],
+              replyCount: thread.replyCount + 1,
+              lastActive: "Just now",
+            }
+          : thread,
+      ),
+    )
+  }
+
   const sortedThreads = [...filteredThreads].sort((a, b) => {
     if (a.isPinned && !b.isPinned) return -1
     if (!a.isPinned && b.isPinned) return 1
@@ -295,31 +318,33 @@ const CommunityForum = () => {
                     </div>
                   </div>
                 </div>
-                {thread.showReplies && <RepliesSection replies={thread.replies} />}
+                {thread.showReplies && (
+                  <RepliesSection
+                    replies={thread.replies}
+                    onAddReply={(content) => handleAddReply(thread.id, content)}
+                  />
+                )}
               </div>
             ))}
           </div>
 
-
           {/* Pagination */}
           <div className="mt-6 flex justify-center">
             <nav className="flex items-center gap-2">
-              <button 
+              <button
                 onClick={() => handlePageChange(currentPage - 1)}
                 disabled={currentPage === 1}
                 className="px-3 py-1 border rounded hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 Previous
               </button>
-              
+
               {getPageNumbers().map((pageNum) => (
                 <button
                   key={pageNum}
                   onClick={() => handlePageChange(pageNum)}
                   className={`px-3 py-1 rounded ${
-                    pageNum === currentPage
-                      ? 'bg-blue-600 text-white'
-                      : 'border hover:bg-gray-50'
+                    pageNum === currentPage ? "bg-blue-600 text-white" : "border hover:bg-gray-50"
                   }`}
                 >
                   {pageNum}
@@ -341,8 +366,9 @@ const CommunityForum = () => {
   )
 }
 
-const RepliesSection = ({ replies }) => {
+const RepliesSection = ({ replies, onAddReply }) => {
   const [visibleReplies, setVisibleReplies] = useState(2)
+  const [newReplyContent, setNewReplyContent] = useState("")
   const replyContainerRef = useRef(null)
 
   useEffect(() => {
@@ -367,32 +393,58 @@ const RepliesSection = ({ replies }) => {
     }
   }, [replies.length])
 
+  const handleAddReply = () => {
+    if (newReplyContent.trim()) {
+      onAddReply(newReplyContent)
+      setNewReplyContent("")
+    }
+  }
+
   return (
-    <div ref={replyContainerRef} className="mt-4 max-h-60 overflow-y-auto space-y-4 pr-4">
-      {replies.slice(0, visibleReplies).map((reply) => (
-        <div key={reply.id} className="p-4 bg-gray-50 rounded-lg">
-          <div className="flex justify-between items-start mb-2">
-            <span className="font-medium">{reply.author}</span>
+    <div className="mt-4 space-y-4">
+      <div ref={replyContainerRef} className="max-h-60 overflow-y-auto space-y-4 pr-4">
+        {replies.slice(0, visibleReplies).map((reply) => (
+          <div key={reply.id} className="p-4 bg-gray-50 rounded-lg">
+            <div className="flex justify-between items-start mb-2">
+              <span className="font-medium">{reply.author}</span>
+            </div>
+            <p className="text-gray-700">{reply.content}</p>
+            <div className="mt-2 flex items-center gap-2 text-sm text-gray-500">
+              <button className="flex items-center gap-1 hover:text-blue-600">
+                <ThumbsUp size={14} />
+                <span>{reply.likes} likes</span>
+              </button>
+            </div>
           </div>
-          <p className="text-gray-700">{reply.content}</p>
-          <div className="mt-2 flex items-center gap-2 text-sm text-gray-500">
-            <button className="flex items-center gap-1 hover:text-blue-600">
-              <ThumbsUp size={14} />
-              <span>{reply.likes} likes</span>
-            </button>
-          </div>
-        </div>
-      ))}
-      {visibleReplies < replies.length && (
+        ))}
+        {visibleReplies < replies.length && (
+          <button
+            onClick={() => setVisibleReplies((prev) => Math.min(prev + 2, replies.length))}
+            className="w-full text-center text-blue-600 hover:text-blue-700 transition-colors"
+          >
+            Show More
+          </button>
+        )}
+      </div>
+      <div className="mt-4">
+        <textarea
+          value={newReplyContent}
+          onChange={(e) => setNewReplyContent(e.target.value)}
+          placeholder="Write your reply here..."
+          className="w-full px-3 py-2 border rounded-lg mb-2 h-24"
+        />
         <button
-          onClick={() => setVisibleReplies((prev) => Math.min(prev + 2, replies.length))}
-          className="w-full text-center text-blue-600 hover:text-blue-700 transition-colors"
+          onClick={handleAddReply}
+          disabled={!newReplyContent.trim()}
+          className="flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed"
         >
-          Show More
+          <Send size={20} />
+          <span>Post Reply</span>
         </button>
-      )}
+      </div>
     </div>
   )
 }
 
 export default CommunityForum
+
