@@ -67,7 +67,7 @@ const NavBar = () => {
 			{isMenuOpen && (
 				<div
 					ref={menuRef}
-					className="absolute right-0 mt-12 w-48 rounded-xl shadow-lg bg-[#729EA1] ring-1 ring-black ring-opacity-5 focus:outline-none"
+					className="absolute right-0 mt-42 w-48 rounded-xl shadow-lg bg-[#729EA1]  focus:outline-none"
 					role="menu"
 					aria-orientation="vertical"
 					aria-labelledby="user-menu"
