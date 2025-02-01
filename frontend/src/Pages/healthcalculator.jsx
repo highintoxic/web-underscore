@@ -1,4 +1,5 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
+import Cookies from "js-cookie"
 import { BaseLayout } from "../Layouts"
 import { HealthChart } from "./health-chart"
 import { HealthRecommendations } from "./health-recommendations"
@@ -16,10 +17,50 @@ const HealthCalculator = () => {
   const [result, setResult] = useState(null)
   const [healthData, setHealthData] = useState([])
 
+  // Load data from cookies on initial render
+  useEffect(() => {
+    const cookieData = Cookies.get("healthData")
+    if (cookieData) {
+      try {
+        const parsedData = JSON.parse(cookieData)
+        setHealthData(parsedData)
+        // Sync with localStorage for backup
+        localStorage.setItem("healthData", cookieData)
+      } catch (error) {
+        console.error("Error parsing cookie data:", error)
+        // Fallback to localStorage if cookie parsing fails
+        const localData = localStorage.getItem("healthData")
+        if (localData) {
+          try {
+            setHealthData(JSON.parse(localData))
+          } catch (error) {
+            console.error("Error parsing localStorage data:", error)
+          }
+        }
+      }
+    }
+  }, [])
+
   const saveResult = (type, value) => {
     const newData = [...healthData, { type, value, date: new Date().toISOString() }]
     setHealthData(newData)
-    localStorage.setItem("healthData", JSON.stringify(newData))
+
+    // Save to both cookies and localStorage
+    try {
+      const jsonData = JSON.stringify(newData)
+      // Set cookie with 30 days expiration
+      Cookies.set("healthData", jsonData, { expires: 30, secure: true, sameSite: "strict" })
+      localStorage.setItem("healthData", jsonData)
+    } catch (error) {
+      console.error("Error saving data:", error)
+    }
+  }
+
+  // Clear all stored data
+  const clearStoredData = () => {
+    setHealthData([])
+    Cookies.remove("healthData")
+    localStorage.removeItem("healthData")
   }
 
   const calculateBMI = () => {
@@ -89,21 +130,22 @@ const HealthCalculator = () => {
     <BaseLayout>
       <div className="w-full min-h-screen bg-gray-100 p-4 sm:p-6 mt-15">
         <div className="w-full max-w-7xl mx-auto">
-          <h1 className="text-2xl sm:text-3xl font-bold text-blue-600 mb-4 sm:mb-6 px-2">
-            Multi-Functional Health Calculator
-          </h1>
-          
+          <div className="flex justify-between items-center mb-4 sm:mb-6 px-2">
+            <h1 className="text-2xl sm:text-3xl font-bold text-blue-600">Multi-Functional Health Calculator</h1>
+            <button
+              onClick={clearStoredData}
+              className="text-sm px-3 py-1 text-red-600 hover:text-red-700 border border-red-600 rounded hover:bg-red-50 transition-colors hover:cursor-pointer "
+            >
+              Clear All Data
+            </button>
+          </div>
+
           <div className="space-y-6">
-            {/* Main Calculator Section */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
-              {/* Input Section */}
               <div className="bg-white rounded-lg shadow-sm p-4 sm:p-6">
                 <div className="space-y-4">
-                  {/* Calculator Selection */}
                   <div>
-                    <label className="block text-base sm:text-lg font-medium mb-2">
-                      Select Calculator:
-                    </label>
+                    <label className="block text-base sm:text-lg font-medium mb-2">Select Calculator:</label>
                     <select
                       value={selectedCalculator}
                       onChange={(e) => {
@@ -122,16 +164,13 @@ const HealthCalculator = () => {
                     </select>
                   </div>
 
-                  {/* Dynamic Input Fields */}
                   <div className="space-y-4">
                     {(selectedCalculator === "BMI" ||
                       selectedCalculator === "BMR" ||
-                      selectedCalculator === "DiabetesRisk") && (
+                      selectedCalculator === "DiabetesRisk" || selectedCalculator=="BodyFat") && (
                       <>
                         <div>
-                          <label className="block text-base sm:text-lg font-medium mb-2">
-                            Weight (kg):
-                          </label>
+                          <label className="block text-base sm:text-lg font-medium mb-2">Weight (kg):</label>
                           <input
                             type="number"
                             value={weight}
@@ -140,9 +179,7 @@ const HealthCalculator = () => {
                           />
                         </div>
                         <div>
-                          <label className="block text-base sm:text-lg font-medium mb-2">
-                            Height (m):
-                          </label>
+                          <label className="block text-base sm:text-lg font-medium mb-2">Height (m):</label>
                           <input
                             type="number"
                             value={height}
@@ -153,12 +190,9 @@ const HealthCalculator = () => {
                       </>
                     )}
 
-                    {(selectedCalculator === "BMR" ||
-                      selectedCalculator === "DiabetesRisk") && (
+                    {(selectedCalculator === "BMR" || selectedCalculator === "DiabetesRisk") && (
                       <div>
-                        <label className="block text-base sm:text-lg font-medium mb-2">
-                          Age:
-                        </label>
+                        <label className="block text-base sm:text-lg font-medium mb-2">Age:</label>
                         <input
                           type="number"
                           value={age}
@@ -170,9 +204,7 @@ const HealthCalculator = () => {
 
                     {selectedCalculator === "BMR" && (
                       <div>
-                        <label className="block text-base sm:text-lg font-medium mb-2">
-                          Gender:
-                        </label>
+                        <label className="block text-base sm:text-lg font-medium mb-2">Gender:</label>
                         <select
                           value={gender}
                           onChange={(e) => setGender(e.target.value)}
@@ -186,9 +218,7 @@ const HealthCalculator = () => {
 
                     {selectedCalculator === "BodyFat" && (
                       <div>
-                        <label className="block text-base sm:text-lg font-medium mb-2">
-                          Waist Circumference (cm):
-                        </label>
+                        <label className="block text-base sm:text-lg font-medium mb-2">Waist Circumference (cm):</label>
                         <input
                           type="number"
                           value={waist}
@@ -199,16 +229,10 @@ const HealthCalculator = () => {
                     )}
                   </div>
 
-                  {/* Special Calculators */}
-                  {selectedCalculator === "WaterIntake" && (
-                    <WaterIntakeCalculator saveResult={saveResult} />
-                  )}
+                  {selectedCalculator === "WaterIntake" && <WaterIntakeCalculator saveResult={saveResult} />}
 
-                  {selectedCalculator === "MentalHealth" && (
-                    <MentalHealthAssessment saveResult={saveResult} />
-                  )}
+                  {selectedCalculator === "MentalHealth" && <MentalHealthAssessment saveResult={saveResult} />}
 
-                  {/* Calculate Button */}
                   {selectedCalculator &&
                     selectedCalculator !== "WaterIntake" &&
                     selectedCalculator !== "MentalHealth" && (
@@ -220,7 +244,6 @@ const HealthCalculator = () => {
                       </button>
                     )}
 
-                  {/* Results Display */}
                   {result && (
                     <div className="mt-6 p-4 bg-gray-50 rounded-lg border">
                       <h2 className="text-lg sm:text-xl font-semibold mb-2">Result:</h2>
@@ -230,7 +253,6 @@ const HealthCalculator = () => {
                 </div>
               </div>
 
-              {/* Charts and Recommendations */}
               <div className="space-y-6">
                 <div className="bg-white rounded-lg shadow-sm p-4 sm:p-6">
                   <HealthChart
@@ -239,15 +261,11 @@ const HealthCalculator = () => {
                   />
                 </div>
                 <div className="bg-white rounded-lg shadow-sm p-4 sm:p-6">
-                  <HealthRecommendations 
-                    result={result} 
-                    selectedCalculator={selectedCalculator} 
-                  />
+                  <HealthRecommendations result={result} selectedCalculator={selectedCalculator} />
                 </div>
               </div>
             </div>
 
-            {/* Progress Tracker */}
             <div className="bg-white rounded-lg shadow-sm p-4 sm:p-6">
               <ProgressTracker data={healthData} />
             </div>
@@ -259,3 +277,4 @@ const HealthCalculator = () => {
 }
 
 export default HealthCalculator
+
