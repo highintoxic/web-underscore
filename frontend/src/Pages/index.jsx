@@ -6,4 +6,6 @@ import DiseaseSlider from "./awareness";
 import HealthCalculator from "./healthcalculator";
 import CommunityForum from "./community";
 import TravelingDoctors from "./traveling-doctors";
-export { Home, SignIn, SignUp, NotFound,DiseaseSlider,HealthCalculator,CommunityForum,TravelingDoctors};
+import UserProfilePage from "./UserProfilePage";
+import ResultsPage from "./ResultsPage";
+export { Home, SignIn, SignUp, NotFound,DiseaseSlider,HealthCalculator,CommunityForum,TravelingDoctors,UserProfilePage,ResultsPage};

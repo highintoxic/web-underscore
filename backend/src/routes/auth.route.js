@@ -7,61 +7,96 @@ const router = express.Router();
 
 // Signup Route
 router.post("/signup", async (req, res) => {
-	try {
-		const { username, email, password } = req.body;
+    try {
+        const { 
+            username, 
+            email, 
+            password, 
+            location, 
+            userType,
+            registrationNumber,
+            registrationYear,
+            councilName
+        } = req.body;
 
-		// Validate input
-		if (!username || !email || !password) {
-			return res
-				.status(400)
-				.json({ message: "Please enter all required fields" });
-		}
+        // Validate input
+        if (!username || !email || !password || !location || !userType) {
+            return res.status(400).json({ 
+                message: "Please enter all required fields" 
+            });
+        }
 
-		// Check if username or email exists
-		let existingUser = await User.findOne({
-			$or: [{ email }, { username }],
-		});
+        // Validate doctor-specific fields
+        if (userType === 'doctor' && (!registrationNumber || !registrationYear || !councilName)) {
+            return res.status(400).json({
+                message: "Please enter all required doctor fields"
+            });
+        }
 
-		if (existingUser) {
-			return res.status(400).json({
-				message: "Username or email already exists",
-			});
-		}
+        // Check if username or email exists
+        const existingUser = await User.findOne({
+            $or: [{ email }, { username }],
+        });
 
-		// Hash password
-		const salt = await bcrypt.genSalt(10);
-		const hashedPassword = await bcrypt.hash(password, salt);
+        if (existingUser) {
+            return res.status(400).json({
+                message: "Username or email already exists",
+            });
+        }
 
-		// Create new user
-		const user = new User({
-			username,
-			email,
-			password: hashedPassword,
-		});
-		
-		await user.save();
-		
-		// Generate JWT token
-		const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-		  expiresIn: "1h",
-		});
+        // Hash password
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(password, salt);
 
-		res.status(201).json({
-			token,
-			user: {
-				id: user._id,
-				username: user.username,
-				email: user.email,
-			},
-		});
-	} catch (error) {
-		res.status(500).json({
+        // Create new user with all fields
+        const user = new User({
+            username,
+            email,
+            password: hashedPassword,
+            location,
+            userType,
+            ...(userType === 'doctor' && {
+                registrationNumber,
+                registrationYear,
+                councilName
+            })
+        });
 
-			message: "Server error",
-			error: error.message,
-		});
-		console.log(error);
-	}
+        await user.save();
+
+        // Generate JWT token
+        const token = jwt.sign(
+            { id: user._id }, 
+            process.env.JWT_SECRET, 
+            { expiresIn: "1h" }
+        );
+
+        // Send response without password
+        const userResponse = {
+            id: user._id,
+            username: user.username,
+            email: user.email,
+            location: user.location,
+            userType: user.userType,
+            ...(user.userType === 'doctor' && {
+                registrationNumber: user.registrationNumber,
+                registrationYear: user.registrationYear,
+                councilName: user.councilName
+            })
+        };
+
+        res.status(201).json({
+            token,
+            user: userResponse
+        });
+
+    } catch (error) {
+        console.error("Signup error:", error);
+        res.status(500).json({
+            message: "Server error during signup",
+            error: error.message
+        });
+    }
 });
 
 // Signin Route
