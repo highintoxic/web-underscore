@@ -127,12 +127,12 @@ const NavBar = () => {
 				>
 					Products
 				</Link>
-				<Link
-					to="#"
-					className="text-white hover:text-white/80 transition-colors"
-				>
-					Services
-				</Link>
+				<Link to="/healthcalculator" className="text-white hover:text-white/80 transition-colors">
+				Calculator
+			</Link>
+			<Link to="/awareness" className="text-white hover:text-white/80 transition-colors">
+				Awareness
+			</Link>
 				<Link
 					to="#"
 					className="text-white hover:text-white/80 transition-colors"
