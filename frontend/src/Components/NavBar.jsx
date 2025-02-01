@@ -40,7 +40,7 @@ const NavBar = () => {
 
 		{/* Desktop Navigation */}
 		<div className="hidden md:flex items-center space-x-8">
-			<Link to="#" className="text-white hover:text-white/80 transition-colors">
+			<Link to="/" className="text-white hover:text-white/80 transition-colors">
 				Home
 			</Link>
 			<Link to="#" className="text-white hover:text-white/80 transition-colors">
