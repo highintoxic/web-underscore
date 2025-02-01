@@ -1,19 +1,20 @@
 /* eslint-disable react/prop-types */
 import { useState, useRef, useEffect } from "react";
 import {
-  MessageSquare,
-  ThumbsUp,
-  Eye,
-  Calendar,
-  Search,
-  Filter,
-  PlusCircle,
-  ChevronDown,
-  ChevronUp,
-  Send,
-} from "lucide-react"
-import { BaseLayout } from "../Layouts"
-const THREADS_PER_PAGE = 10
+	MessageSquare,
+	ThumbsUp,
+	Eye,
+	Calendar,
+	Search,
+	Filter,
+	PlusCircle,
+	ChevronDown,
+	ChevronUp,
+	Send,
+} from "lucide-react";
+import { BaseLayout } from "../Layouts";
+import api from "../utils/api";
+const THREADS_PER_PAGE = 10;
 
 const CommunityForum = () => {
 	const [threads, setThreads] = useState([]);
@@ -132,39 +133,41 @@ const CommunityForum = () => {
 		}
 	};
 
-  const handleAddReply = (threadId, replyContent) => {
-    setThreads(
-      threads.map((thread) =>
-        thread.id === threadId
-          ? {
-              ...thread,
-              replies: [
-                ...thread.replies,
-                {
-                  id: Date.now(),
-                  author: "CurrentUser", // Replace with actual current user's name
-                  content: replyContent,
-                  likes: 0,
-                },
-              ],
-              replyCount: thread.replyCount + 1,
-              lastActive: "Just now",
-            }
-          : thread,
-      ),
-    )
-  }
-
-  const sortedThreads = [...filteredThreads].sort((a, b) => {
-    if (a.isPinned && !b.isPinned) return -1
-    if (!a.isPinned && b.isPinned) return 1
-    return 0
-  })
+	useEffect(() => {
+		const fetchThreads = async () => {
+			try {
+				const { data: fetchedThreads } = await api.get("/forum/threads");
+        const formattedThreads = fetchedThreads.map((thread) => ({
+          ...thread,
+          lastActive: new Date(thread.lastActive).toLocaleDateString("en-US", {
+            year: "numeric",
+            month: "short",
+            day: "numeric",
+          }),
+        }));
+				
+				// Ensure we have an array
+				const threads = Array.isArray(formattedThreads) ? formattedThreads : [];
+				setThreads(threads);
+				setFilteredThreads(threads);
+			} catch (error) {
+				console.error("Failed to fetch threads:", error);
+				setThreads([]);
+				setFilteredThreads([]);
+			}
+		};
+		fetchThreads();
+	}, []); // Remove threads from dependency
 
 	useEffect(() => {
 		handleSearch();
 	}, [searchQuery, threads]); // Update filtered threads when search or threads change
 
+	const sortedThreads = (filteredThreads || []).sort((a, b) => {
+		if (a.isPinned && !b.isPinned) return -1;
+		if (!a.isPinned && b.isPinned) return 1;
+		return 0;
+	});
 
 	return (
 		<BaseLayout>
