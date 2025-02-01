@@ -50,6 +50,14 @@ const MetricItem = ({ icon, label, value, unit, status, color }) => (
           color="bg-green-500"
         />
         <MetricItem icon="💨" label="SpO2" value={metrics.spo2} unit="%" status="Normal" color="bg-green-500" />
+        <MetricItem
+          icon="🫁"
+          label="Respiratory Rate"
+          value={metrics.respiratory_rate}
+          unit="breaths/min"
+          status="Normal"
+          color="bg-green-500"
+        />
       </div>
     )
   }

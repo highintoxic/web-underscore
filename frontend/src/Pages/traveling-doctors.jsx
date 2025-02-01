@@ -4,24 +4,38 @@ import { useState, useEffect } from "react"
 import { format, isEqual, startOfMonth, endOfMonth, eachDayOfInterval } from "date-fns"
 import { BaseLayout } from "../Layouts"
 
-const symptoms = [
-  { id: "cough", label: "Cough", specialty: "Physician" },
-  { id: "headache", label: "Headache", specialty: "Neurologist" },
-  { id: "stomachPain", label: "Stomach Pain", specialty: "Gastroenterologist" },
-  { id: "fever", label: "Fever", specialty: "Physician" },
-  { id: "rash", label: "Rash", specialty: "Dermatologist" },
-]
+// Symptom keywords mapping to specialties
+const symptomSpecialties = {
+  "headache": "Neurologist",
+  "migraine": "Neurologist",
+  "stomach": "Gastroenterologist",
+  "digestion": "Gastroenterologist",
+  "skin": "Dermatologist",
+  "rash": "Dermatologist",
+  "fever": "Physician",
+  "cough": "Physician",
+  // Add more keywords as needed
+}
 
 const mockDoctors = [
-  { id: 1, name: "Dr. Smith", specialty: "Physician", availability: ["2025-02-04", "2025-02-11", "2025-02-12"] },
-  { id: 2, name: "Dr. Johnson", specialty: "Neurologist", availability: ["2025-02-12", "2025-02-13", "2025-02-21"] },
+  {
+    id: 1,
+    name: "Dr. Smith",
+    specialty: "Physician",
+    availability: ["2025-02-04", "2025-02-11", "2025-02-12"],
+    location: { latitude: 40.7128, longitude: -74.006 }, // Example coordinates
+    rating: 4.5,
+  },
+  { id: 2, name: "Dr. Johnson", specialty: "Neurologist", availability: ["2025-02-12", "2025-02-13", "2025-02-21"], location: { latitude: 40.7128, longitude: -74.006 }, rating: 4.5 },
   {
     id: 3,
     name: "Dr. Williams",
     specialty: "Gastroenterologist",
     availability: ["2025-03-10", "2025-03-12", "2025-02-07"],
+    location: { latitude: 40.7128, longitude: -74.006 },
+    rating: 4.5,
   },
-  { id: 4, name: "Dr. Brown", specialty: "Dermatologist", availability: ["2025-02-11", "2025-02-13", "2025-03-16"] },
+  { id: 4, name: "Dr. Brown", specialty: "Dermatologist", availability: ["2025-02-11", "2025-02-13", "2025-03-16"], location: { latitude: 40.7128, longitude: -74.006 }, rating: 4.5 },
 ]
 
 function Calendar({ selected, onSelect, disabled, className }) {
@@ -83,7 +97,7 @@ function Calendar({ selected, onSelect, disabled, className }) {
 }
 
 export default function TravelingDoctors() {
-  const [selectedSymptom, setSelectedSymptom] = useState("")
+  const [symptomInput, setSymptomInput] = useState("")
   const [recommendedDoctor, setRecommendedDoctor] = useState(null)
   const [selectedDate, setSelectedDate] = useState(null)
   const [userLocation, setUserLocation] = useState(null)
@@ -106,12 +120,15 @@ export default function TravelingDoctors() {
   }, [])
 
   useEffect(() => {
-    if (selectedSymptom) {
-      const symptom = symptoms.find((s) => s.id === selectedSymptom)
-      const doctor = mockDoctors.find((d) => d.specialty === symptom.specialty)
-      setRecommendedDoctor(doctor)
+    if (symptomInput) {
+      const keywords = symptomInput.toLowerCase().split(" ")
+      const matchedSpecialty = keywords.map((keyword) => symptomSpecialties[keyword]).find((specialty) => specialty)
+      if (matchedSpecialty) {
+        const doctor = mockDoctors.find((d) => d.specialty === matchedSpecialty)
+        setRecommendedDoctor(doctor)
+      }
     }
-  }, [selectedSymptom])
+  }, [symptomInput])
 
   const handleBookAppointment = () => {
     console.log("Booking appointment with:", recommendedDoctor, "on", selectedDate)
@@ -129,27 +146,18 @@ export default function TravelingDoctors() {
       <div className="w-full max-w-md mx-auto bg-white shadow-md rounded-lg overflow-hidden">
         <div className="p-6">
           <h2 className="text-2xl font-bold mb-2">Book a Traveling Doctor</h2>
-          <p className="text-gray-600 mb-6">Select your symptoms and we'll find a doctor for you</p>
+          <p className="text-gray-600 mb-6">Enter your symptoms and we'll find a doctor for you</p>
           {!bookingConfirmed ? (
             <>
               <div className="mb-4">
                 <label className="block text-sm font-medium text-gray-700 mb-2">What are your symptoms?</label>
-                <div>
-                  {symptoms.map((symptom) => (
-                    <div key={symptom.id} className="flex items-center mb-2">
-                      <input
-                        type="radio"
-                        id={symptom.id}
-                        name="symptom"
-                        value={symptom.id}
-                        checked={selectedSymptom === symptom.id}
-                        onChange={(e) => setSelectedSymptom(e.target.value)}
-                        className="mr-2"
-                      />
-                      <label htmlFor={symptom.id}>{symptom.label}</label>
-                    </div>
-                  ))}
-                </div>
+                <input
+                  type="text"
+                  value={symptomInput}
+                  onChange={(e) => setSymptomInput(e.target.value)}
+                  className="w-full p-2 border rounded"
+                  placeholder="e.g., headache, stomach pain"
+                />
               </div>
               {recommendedDoctor && (
                 <div className="mb-4">

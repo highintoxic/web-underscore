@@ -1,3 +1,5 @@
+"use client"
+
 import { Doughnut } from "react-chartjs-2"
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js"
 
@@ -43,16 +45,20 @@ const CircularProgressIndicator = ({ value, maxValue, label, color }) => {
 
 const CircularProgressIndicators = ({ metrics }) => {
   return (
-    <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-      <CircularProgressIndicator value={metrics.heart_rate} maxValue={120} label="Heart Rate" color="#FF6384" />
-      <CircularProgressIndicator value={metrics.spo2} maxValue={100} label="SpO2" color="#36A2EB" />
-      <CircularProgressIndicator value={metrics.blood_sugar} maxValue={200} label="Blood Sugar" color="#FFCE56" />
-      <CircularProgressIndicator
-        value={metrics.respiratory_rate}
-        maxValue={30}
-        label="Respiratory Rate"
-        color="#4BC0C0"
-      />
+    <div className="flex flex-col items-center gap-8">
+      <div className="flex gap-8">
+        <CircularProgressIndicator value={metrics.heart_rate} maxValue={120} label="Heart Rate" color="#FF6384" />
+        <CircularProgressIndicator value={metrics.spo2} maxValue={100} label="SpO2" color="#36A2EB" />
+      </div>
+      <div className="flex gap-8">
+        <CircularProgressIndicator value={metrics.blood_sugar} maxValue={200} label="Blood Sugar" color="#FFCE56" />
+        <CircularProgressIndicator
+          value={metrics.respiratory_rate}
+          maxValue={30}
+          label="Respiratory Rate"
+          color="#4BC0C0"
+        />
+      </div>
     </div>
   )
 }
