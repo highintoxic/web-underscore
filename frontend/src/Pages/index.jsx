@@ -2,4 +2,6 @@ import Home from "./Home";
 import SignIn from "./signin";
 import SignUp from "./signup";
 import NotFound from "./404";
-export { Home, SignIn, SignUp, NotFound };
+import DiseaseSlider from "./awareness";
+import HealthCalculator from "./healthcalculator";
+export { Home, SignIn, SignUp, NotFound,DiseaseSlider,HealthCalculator};
