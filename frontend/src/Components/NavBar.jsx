@@ -29,6 +29,7 @@ const NavBar = () => {
 	};
 
 	return (
+		
 		<nav className="fixed top-0 left-0 right-0 w-full bg-[#3D52D5] border-b rounded-none backdrop-blur-lg border-white/10 shadow-lg z-50">
 	<div className="px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16">
 		{/* Logo */}
@@ -38,14 +39,17 @@ const NavBar = () => {
 
 		{/* Desktop Navigation */}
 		<div className="hidden md:flex items-center space-x-8">
-			<Link to="#" className="text-white hover:text-white/80 transition-colors">
+			<Link to="/" className="text-white hover:text-white/80 transition-colors">
 				Home
 			</Link>
 			<Link to="#" className="text-white hover:text-white/80 transition-colors">
 				Products
 			</Link>
-			<Link to="#" className="text-white hover:text-white/80 transition-colors">
-				Services
+			<Link to="/healthcalculator" className="text-white hover:text-white/80 transition-colors">
+				Calculator
+			</Link>
+			<Link to="/awareness" className="text-white hover:text-white/80 transition-colors">
+				Awareness
 			</Link>
 			<Link to="#" className="text-white hover:text-white/80 transition-colors">
 				Contact
@@ -82,7 +86,7 @@ const NavBar = () => {
 							Sign in
 						</Link>
 						<Link
-							to="/signup"
+							to=" /signup"
 							className="block px-4 py-2 rounded-b-2xl text-sm text-white hover:bg-white/10"
 							role="menuitem"
 						>
@@ -122,12 +126,12 @@ const NavBar = () => {
 				>
 					Products
 				</Link>
-				<Link
-					to="#"
-					className="text-white hover:text-white/80 transition-colors"
-				>
-					Services
-				</Link>
+				<Link to="/healthcalculator" className="text-white hover:text-white/80 transition-colors">
+				Calculator
+			</Link>
+			<Link to="/awareness" className="text-white hover:text-white/80 transition-colors">
+				Awareness
+			</Link>
 				<Link
 					to="#"
 					className="text-white hover:text-white/80 transition-colors"
