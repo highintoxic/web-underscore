@@ -51,8 +51,8 @@ const NavBar = () => {
 					<Link to="/" className="text-white hover:text-white/80 transition-colors">
 						Home
 					</Link>
-					<Link to="#" className="text-white hover:text-white/80 transition-colors">
-						Products
+					<Link to="/doctor" className="text-white hover:text-white/80 transition-colors">
+						TravelDoc
 					</Link>
 					<Link to="/healthcalculator" className="text-white hover:text-white/80 transition-colors">
 						Calculator
@@ -60,6 +60,7 @@ const NavBar = () => {
 					<Link to="/awareness" className="text-white hover:text-white/80 transition-colors">
 						Awareness
 					</Link>
+					
 					<Link to="/communityforum" className="text-white hover:text-white/80 transition-colors">
 						Community
 					</Link>

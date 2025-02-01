@@ -1,5 +1,5 @@
 import { Routes, Route } from "react-router"
-import { Home,SignIn,SignUp, NotFound,DiseaseSlider,HealthCalculator, CommunityForum} from "./Pages"
+import { Home,SignIn,SignUp, NotFound,DiseaseSlider,HealthCalculator, CommunityForum, TravelingDoctors} from "./Pages"
 
 const App = () => {
   return (
@@ -10,6 +10,7 @@ const App = () => {
       <Route path="/awareness" element={<DiseaseSlider/>}/>
       <Route path="/healthcalculator" element={<HealthCalculator/>}/>
       <Route path="/communityforum" element={<CommunityForum/>}/>
+      <Route path="/doctor" element={<TravelingDoctors/>}/>
       <Route path="*" element={<NotFound/>} />
     </Routes>
   )

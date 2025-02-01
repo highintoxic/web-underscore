@@ -5,4 +5,5 @@ import NotFound from "./404";
 import DiseaseSlider from "./awareness";
 import HealthCalculator from "./healthcalculator";
 import CommunityForum from "./community";
-export { Home, SignIn, SignUp, NotFound,DiseaseSlider,HealthCalculator,CommunityForum};
+import TravelingDoctors from "./traveling-doctors";
+export { Home, SignIn, SignUp, NotFound,DiseaseSlider,HealthCalculator,CommunityForum,TravelingDoctors};
