@@ -1,9 +1,17 @@
 import { useState, useRef, useEffect } from "react";
 import { User, Menu, X } from "lucide-react";
 import { Link } from "react-router";
-import SignIn from "../Pages/signin";
-import SignUp from "../Pages/signup";
+
 const NavBar = () => {
+	const [user, setUser] = useState(null);
+
+	useEffect(() => {
+		const storedUser = localStorage.getItem("user");
+		if (storedUser) {
+			setUser(JSON.parse(storedUser));
+		}
+	}, []);
+
 	const [isOpen, setIsOpen] = useState(false);
 	const [isMenuOpen, setIsMenuOpen] = useState(false);
 	const menuRef = useRef(null);
@@ -30,115 +38,126 @@ const NavBar = () => {
 	};
 
 	return (
+
 		<nav className="fixed top-0 left-0 right-0 w-full bg-[#3D52D5] border-b rounded-none backdrop-blur-lg border-white/10 shadow-lg z-50">
-	<div className="px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16">
-		{/* Logo */}
-		<Link to="/" className="text-white font-semibold text-xl">
-			. /
-		</Link>
+			<div className="px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16">
+				{/* Logo */}
+				<Link to="/" className="text-white font-semibold text-xl">
+					. /
+				</Link>
 
-		{/* Desktop Navigation */}
-		<div className="hidden md:flex items-center space-x-8">
-			<Link to="#" className="text-white hover:text-white/80 transition-colors">
-				Home
-			</Link>
-			<Link to="#" className="text-white hover:text-white/80 transition-colors">
-				Products
-			</Link>
-			<Link to="#" className="text-white hover:text-white/80 transition-colors">
-				Services
-			</Link>
-			<Link to="#" className="text-white hover:text-white/80 transition-colors">
-				Contact
-			</Link>
-		</div>
+				{/* Desktop Navigation */}
+				<div className="hidden md:flex items-center space-x-8">
+					<Link to="/" className="text-white hover:text-white/80 transition-colors">
+						Home
+					</Link>
+					<Link to="#" className="text-white hover:text-white/80 transition-colors">
+						Products
+					</Link>
+					<Link to="/healthcalculator" className="text-white hover:text-white/80 transition-colors">
+						Calculator
+					</Link>
+					<Link to="/awareness" className="text-white hover:text-white/80 transition-colors">
+						Awareness
+					</Link>
+					<Link to="/communityforum" className="text-white hover:text-white/80 transition-colors">
+						Community
+					</Link>
+				</div>
 
-		{/* Right Side Icons */}
-		<div className="flex items-center space-x-4">
-			{/* User Icon */}
-			<button
-				className="p-2 hover:bg-white/10 rounded-full transition-colors"
-				onClick={handleButtonClick}
-				aria-haspopup="true"
-				aria-expanded={isMenuOpen}
-			>
-				<User className="h-5 w-5 text-white hover:cursor-pointer" />
-			</button>
-			{/* Menu */}
-			{isMenuOpen && (
-				<div
-					ref={menuRef}
-					className="absolute right-0 mt-42 w-48 rounded-xl shadow-lg bg-[#729EA1]  focus:outline-none"
-					role="menu"
-					aria-orientation="vertical"
-					aria-labelledby="user-menu"
-					onMouseLeave={handleMenuMouseLeave}
-				>
-					<div className="py-1" role="none">
-						<Link
-							to="/signin"
-							className="block px-4 py-2 rounded-t-2xl text-sm text-white hover:bg-white/10"
-							role="menuitem"
+				{/* Right Side Icons */}
+				<div className="flex items-center space-x-4">
+					{user ? (
+
+						<Link to="/" className="text-white font-semibold flex items-center gap-2">
+							<User /> {user.username} {/* Use UserIcon from lucid-react */}
+						</Link>
+					) : (
+						<button
+							className="p-2 hover:bg-white/10 rounded-full transition-colors"
+							onClick={handleButtonClick}
+							aria-haspopup="true"
+							aria-expanded={isMenuOpen}
 						>
-							Sign in
+							<User className="h-5 w-5 text-white hover:cursor-pointer" />
+						</button>
+
+					)}
+					{/* User Icon */}
+					{isMenuOpen && (
+						<div
+							ref={menuRef}
+							className="absolute right-0 mt-42 w-48 rounded-xl shadow-lg bg-[#729EA1]  focus:outline-none"
+							role="menu"
+							aria-orientation="vertical"
+							aria-labelledby="user-menu"
+							onMouseLeave={handleMenuMouseLeave}
+						>
+							<div className="py-1" role="none">
+								<Link
+									to="/signin"
+									className="block px-4 py-2 rounded-t-2xl text-sm text-white hover:bg-white/10"
+									role="menuitem"
+								>
+									Sign in
+								</Link>
+								<Link
+									to="/signup"
+									className="block px-4 py-2 rounded-b-2xl text-sm text-white hover:bg-white/10"
+									role="menuitem"
+								>
+									Sign up
+								</Link>
+							</div>
+						</div>
+					)}
+
+					{/* Mobile Menu Button */}
+					<button
+						className="md:hidden p-2 hover:bg-white/10 rounded-full transition-colors"
+						onClick={() => setIsOpen(!isOpen)}
+					>
+						{isOpen ? (
+							<X className="h-6 w-6 text-white" />
+						) : (
+							<Menu className="h-6 w-6 text-white" />
+						)}
+					</button>
+				</div>
+			</div>
+
+			{/* Mobile Menu */}
+			{isOpen && (
+				<div className="md:hidden mt-2 bg-[#3D52D5] border rounded-xl border-white/10 shadow-lg">
+					<div className="flex flex-col items-center space-y-4 py-4">
+						<Link
+							to="#"
+							className="text-white hover:text-white/80 transition-colors"
+						>
+							Home
 						</Link>
 						<Link
-							to="/signup"
-							className="block px-4 py-2 rounded-b-2xl text-sm text-white hover:bg-white/10"
-							role="menuitem"
+							to="#"
+							className="text-white hover:text-white/80 transition-colors"
 						>
-							Sign up
+							Products
+						</Link>
+						<Link to="/healthcalculator" className="text-white hover:text-white/80 transition-colors">
+							Calculator
+						</Link>
+						<Link to="/awareness" className="text-white hover:text-white/80 transition-colors">
+							Awareness
+						</Link>
+						<Link
+							to="#"
+							className="text-white hover:text-white/80 transition-colors"
+						>
+							Contact
 						</Link>
 					</div>
 				</div>
 			)}
-
-			{/* Mobile Menu Button */}
-			<button
-				className="md:hidden p-2 hover:bg-white/10 rounded-full transition-colors"
-				onClick={() => setIsOpen(!isOpen)}
-			>
-				{isOpen ? (
-					<X className="h-6 w-6 text-white" />
-				) : (
-					<Menu className="h-6 w-6 text-white" />
-				)}
-			</button>
-		</div>
-	</div>
-
-	{/* Mobile Menu */}
-	{isOpen && (
-		<div className="md:hidden mt-2 bg-[#3D52D5] border rounded-xl border-white/10 shadow-lg">
-			<div className="flex flex-col items-center space-y-4 py-4">
-				<Link
-					to="#"
-					className="text-white hover:text-white/80 transition-colors"
-				>
-					Home
-				</Link>
-				<Link
-					to="#"
-					className="text-white hover:text-white/80 transition-colors"
-				>
-					Products
-				</Link>
-				<Link
-					to="#"
-					className="text-white hover:text-white/80 transition-colors"
-				>
-					Services
-				</Link>
-				<Link
-					to="#"
-					className="text-white hover:text-white/80 transition-colors"
-				>
-					Contact
-				</Link>
-			</div>
-		</div>
-	)}
-</nav>
+		</nav>
 
 	);
 };

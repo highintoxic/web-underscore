@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import BaseLayout from "../Layouts/BaseLayout";
-
+import api from "../utils/api";
 export default function SignIn() {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
@@ -26,8 +26,8 @@ export default function SignIn() {
     setError("");
 
     try {
-      const response = await axios.post(
-        "https://206.189.60.142:3000/api/signin",
+      const response = await api.post(
+        "/auth/signin",
         formData,
         {
           headers: {
@@ -43,7 +43,7 @@ export default function SignIn() {
       localStorage.setItem("user", JSON.stringify(user));
 
       // Navigate to encourage page
-      navigate("/encourage");
+      navigate("/");
     } catch (error) {
       console.error("Signin error details:", error.response || error);
       setError(
