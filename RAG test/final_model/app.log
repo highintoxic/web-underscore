@@ -1,0 +1,25 @@
+INFO:root:Session ID: string, User Query: Name the types of skin diseases, Model: llama3
+INFO:root:Session ID: string, User Query: name types of skin diseases, Model: llama3
+INFO:httpx:HTTP Request: POST http://127.0.0.1:11434/api/generate "HTTP/1.1 500 Internal Server Error"
+INFO:root:Session ID: ea878aaa-5aa9-4f20-93f4-600de3860ed5, User Query: name types of skin diseases, Model: llama3
+INFO:httpx:HTTP Request: POST http://127.0.0.1:11434/api/generate "HTTP/1.1 500 Internal Server Error"
+INFO:root:Session ID: string, User Query: hello, Model: llama3
+INFO:httpx:HTTP Request: POST http://127.0.0.1:11434/api/generate "HTTP/1.1 200 OK"
+INFO:root:Session ID: string, AI Response: Hello! I'm happy to help you with any questions or tasks you may have. What's on your mind today?
+INFO:root:Session ID: 2782d8f5-11b0-4574-a53d-6f176986de9f, User Query: hello, Model: llama3
+INFO:httpx:HTTP Request: POST http://127.0.0.1:11434/api/generate "HTTP/1.1 200 OK"
+INFO:root:Session ID: 2782d8f5-11b0-4574-a53d-6f176986de9f, AI Response: Hello! It seems you're interested in learning about a specific category of health issues related to Ayurvedic medicine. You mentioned "Raktapradoshaja vyadhi" which refers to skin diseases caused by excessive blood (rakta) and heat (pitta). Am I correct?
+INFO:root:Session ID: 6cd34cd6-6237-44c1-9bb7-62668e3a143d, User Query: what do patients suffering from kushta do?, Model: llama3
+INFO:httpx:HTTP Request: POST http://127.0.0.1:11434/api/generate "HTTP/1.1 200 OK"
+INFO:root:Session ID: 6cd34cd6-6237-44c1-9bb7-62668e3a143d, AI Response: According to the provided context, patients suffering from Kushta (a dermatological disease) typically turn to various healthcare systems in the hope of finding a cure. By the time they approach an Ayurvedic doctor for treatment, the disease has often reached a chronic state, making treatment more challenging.
+
+In terms of specific actions taken by these patients, it is recommended that they:
+
+1. Drink enough water/liquid every day.
+2. Eat enough seasonal vegetables and fruit.
+3. Avoid vegetarian food, fatty, fast food/junk food diets.
+
+Additionally, Ayurvedic treatment approaches for Kushta patients involve various therapies, such as Shodhana, Nasya, Vamana, and Virechana, which are tailored to the specific imbalance of Dosha-Dushya Avastha.
+INFO:root:Session ID: af99239c-1755-4ca2-8e9d-d48da611794a, User Query: hello there, Model: llama3
+INFO:httpx:HTTP Request: POST http://127.0.0.1:11434/api/generate "HTTP/1.1 200 OK"
+INFO:root:Session ID: 0367a3bc-9a49-45bc-9228-3ff31e067478, User Query: hello, Model: llama3
