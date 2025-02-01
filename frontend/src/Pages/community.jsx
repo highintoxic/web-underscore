@@ -12,6 +12,7 @@ import {
   Send,
 } from "lucide-react"
 import { BaseLayout } from "../Layouts"
+const THREADS_PER_PAGE = 10;
 
 const CommunityForum = () => {
   const [threads, setThreads] = useState([
@@ -54,11 +55,33 @@ const CommunityForum = () => {
     },
   ])
 
+  const [currentPage, setCurrentPage] = useState(1)
   const [newThreadContent, setNewThreadContent] = useState("")
   const [newThreadTitle, setNewThreadTitle] = useState("")
   const [isCreatingNewThread, setIsCreatingNewThread] = useState(false)
   const [searchQuery, setSearchQuery] = useState("")
   const [filteredThreads, setFilteredThreads] = useState(threads)
+
+  const totalPages = Math.ceil(filteredThreads.length / THREADS_PER_PAGE)
+
+  const getCurrentPageThreads = () => {
+    const startIndex = (currentPage - 1) * THREADS_PER_PAGE
+    const endIndex = startIndex + THREADS_PER_PAGE
+    return sortedThreads.slice(startIndex, endIndex)
+  }
+
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber)
+    window.scrollTo(0, 0)
+  }
+
+  const getPageNumbers = () => {
+    const pages = []
+    for (let i = 1; i <= totalPages; i++) {
+      pages.push(i)
+    }
+    return pages
+  }
 
   const handleViewReplies = (threadId) => {
     setThreads(
@@ -200,7 +223,7 @@ const CommunityForum = () => {
 
           {/* Thread List */}
           <div className="bg-white rounded-lg shadow-sm divide-y">
-            {sortedThreads.map((thread) => (
+            {getCurrentPageThreads().map((thread) => (
               <div
                 key={thread.id}
                 className={`p-4 hover:bg-gray-50 transition-colors ${thread.isPinned ? "bg-blue-50" : ""}`}
@@ -219,13 +242,13 @@ const CommunityForum = () => {
                           value={newThreadTitle}
                           onChange={(e) => setNewThreadTitle(e.target.value)}
                           placeholder="Enter thread title..."
-                          className="w-full px-3 py-2 border rounded-lg "
+                          className="w-full px-3 py-2 border rounded-lg"
                         />
                         <textarea
                           value={newThreadContent}
                           onChange={(e) => setNewThreadContent(e.target.value)}
                           placeholder="Write your thread content here..."
-                          className="w-full px-3 py-2 border rounded-lg mb-2 h-32 "
+                          className="w-full px-3 py-2 border rounded-lg mb-2 h-32"
                         />
                         <button
                           onClick={handlePostNewThread}
@@ -277,15 +300,39 @@ const CommunityForum = () => {
             ))}
           </div>
 
+
           {/* Pagination */}
           <div className="mt-6 flex justify-center">
             <nav className="flex items-center gap-2">
-              <button className="px-3 py-1 border rounded hover:bg-gray-50">Previous</button>
-              <button className="px-3 py-1 bg-blue-600 text-white rounded">1</button>
-              <button className="px-3 py-1 border rounded hover:bg-gray-50">2</button>
-              <button className="px-3 py-1 border rounded hover:bg-gray-50">3</button>
-              <span className="px-2">...</span>
-              <button className="px-3 py-1 border rounded hover:bg-gray-50">Next</button>
+              <button 
+                onClick={() => handlePageChange(currentPage - 1)}
+                disabled={currentPage === 1}
+                className="px-3 py-1 border rounded hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                Previous
+              </button>
+              
+              {getPageNumbers().map((pageNum) => (
+                <button
+                  key={pageNum}
+                  onClick={() => handlePageChange(pageNum)}
+                  className={`px-3 py-1 rounded ${
+                    pageNum === currentPage
+                      ? 'bg-blue-600 text-white'
+                      : 'border hover:bg-gray-50'
+                  }`}
+                >
+                  {pageNum}
+                </button>
+              ))}
+
+              <button
+                onClick={() => handlePageChange(currentPage + 1)}
+                disabled={currentPage === totalPages}
+                className="px-3 py-1 border rounded hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                Next
+              </button>
             </nav>
           </div>
         </div>
@@ -349,4 +396,3 @@ const RepliesSection = ({ replies }) => {
 }
 
 export default CommunityForum
-
