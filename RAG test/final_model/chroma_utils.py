@@ -1,18 +1,23 @@
 import logging
+import chromadb
+import os
+from langchain_community.embeddings import HuggingFaceEmbeddings  # Updated import
+from langchain_community.vectorstores import Chroma
+from langchain.text_splitter import RecursiveCharacterTextSplitter
+from langchain_community.document_loaders import PyPDFLoader, UnstructuredWordDocumentLoader, UnstructuredHTMLLoader
 
 # Initialize logging
 logging.basicConfig(level=logging.INFO)
 
-from langchain_community.document_loaders import PyPDFLoader, Docx2txtLoader, UnstructuredHTMLLoader
-from langchain_text_splitters import RecursiveCharacterTextSplitter
-from langchain_community.embeddings import HuggingFaceEmbeddings
-from langchain_community.vectorstores import Chroma
-from typing import List
-from langchain_core.documents import Document
-import os
+# Initialize the persistent Chroma client
+client = chromadb.PersistentClient(path="./chroma_db")
 
-# Initialize the embedding function
-embedding_function = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
+# Configure embeddings with explicit parameters
+embedding_function = HuggingFaceEmbeddings(
+    model_name="all-MiniLM-L6-v2",
+    model_kwargs={'device': 'cpu'},
+    encode_kwargs={'normalize_embeddings': True}
+)
 
 # Initialize Chroma with the embedding function
 vectorstore = Chroma(persist_directory="./chroma_db", embedding_function=embedding_function)
@@ -33,7 +38,7 @@ def load_and_split_document(file_path: str) -> List[Document]:
     if file_path.endswith('.pdf'):
         loader = PyPDFLoader(file_path)
     elif file_path.endswith('.docx'):
-        loader = Docx2txtLoader(file_path)
+        loader = UnstructuredWordDocumentLoader(file_path)
     elif file_path.endswith('.html'):
         loader = UnstructuredHTMLLoader(file_path)
     else:

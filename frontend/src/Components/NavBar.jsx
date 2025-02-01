@@ -63,6 +63,9 @@ const NavBar = () => {
 					<Link to="/communityforum" className="text-white hover:text-white/80 transition-colors">
 						Community
 					</Link>
+					<Link to="/videochat" className="text-white hover:text-white/80 transition-colors">
+						VideoChat
+					</Link>
 				</div>
 
 				{/* Right Side Icons */}
@@ -153,6 +156,9 @@ const NavBar = () => {
 							className="text-white hover:text-white/80 transition-colors"
 						>
 							Contact
+						</Link>
+						<Link to="/videochat" className="text-white hover:text-white/80 transition-colors">
+							VideoChat
 						</Link>
 					</div>
 				</div>

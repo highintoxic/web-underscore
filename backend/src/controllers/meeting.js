@@ -1,60 +1,19 @@
-require("dotenv").config();
-const express = require("express");
-const app = express();
-const routes = require("./routes/index");
-const cors = require("cors");
-const { securityMiddleware, requestLogger } = require("./middleware/index");
-const port = 3000;
-
-const { connectDB } = require("./db/index");
-
-const http = require("http");
-const server = http.createServer(app);
+const jwt = require("jsonwebtoken");
 const { Server } = require("socket.io");
-const io = new Server(server, {
-  cors: {
-    origin: process.env.FRONTEND_URL,
-    methods: ["GET", "POST"],
-  },
-});
-
-app.set("server", server);
-
-app.use(
-  cors({
-    origin: process.env.FRONTEND_URL,
-    credentials: true,
-    methods: ["GET", "POST", "PATCH", "DELETE"],
-    allowedHeaders: ["Content-Type", "Authorization"],
-  })
-);
-app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Credentials", "true");
-  next();
-});
-app.use(securityMiddleware);
-app.use(requestLogger);
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-
-app.use("/api", routes);
-
-app.get("/videochat", (req, res) => {
-  res.json({ message: "Video conferencing route" });
-});
 
 let meetings = [];
 
-// Updated Schedule Meeting endpoint
-app.post("/api/meetings", async (req, res) => {
+const scheduleMeeting = async (req, res) => {
   try {
     // Parse JWT from Authorization header
     const authHeader = req.headers.authorization;
     if (!authHeader) {
+      console.log("Missing Authorization header");
       return res.status(401).json({ error: "Missing Authorization header" });
     }
     const token = authHeader.split(" ")[1];
     if (!token) {
+      console.log("Missing JWT token");
       return res.status(401).json({ error: "Missing JWT token" });
     }
 
@@ -64,6 +23,7 @@ app.post("/api/meetings", async (req, res) => {
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
       userId = decoded.userId;
     } catch (err) {
+      console.log("Invalid JWT");
       return res.status(401).json({ error: "Invalid JWT" });
     }
 
@@ -76,6 +36,7 @@ app.post("/api/meetings", async (req, res) => {
 
     // If user not found
     if (!user) {
+      console.log("User not found");
       return res.status(401).json({ error: "User not found" });
     }
 
@@ -83,45 +44,31 @@ app.post("/api/meetings", async (req, res) => {
     const { title, startTime } = req.body;
     const id = Date.now().toString();
     meetings.push({ id, title, startTime });
+    console.log(`Meeting scheduled: ${id}`);
     res.json({ id, title, startTime });
 
     // Schedule meeting start notification
     const startDelay = new Date(startTime).getTime() - Date.now();
     setTimeout(() => {
       console.log(`Meeting ${id} started`);
+      const io = new Server(req.app.get("server"));
       io.to(id).emit("meeting-start", { id, title, startTime });
     }, startDelay);
   } catch (error) {
-    console.error(error);
+    console.error("Failed to create meeting:", error);
     return res.status(500).json({ error: "Failed to create meeting" });
   }
-});
+};
 
-app.get("/api/meetings/:id", (req, res) => {
+const checkMeeting = (req, res) => {
   const meeting = meetings.find((m) => m.id === req.params.id);
   if (!meeting) {
+    console.log("Meeting not found");
     return res.status(404).json({ error: "Meeting not found" });
   }
   const canJoin = Date.now() >= new Date(meeting.startTime).getTime();
+  console.log(`Meeting status: ${meeting.id}, canJoin: ${canJoin}`);
   res.json({ ...meeting, canJoin });
-});
+};
 
-// Socket.io signaling server
-io.on("connection", (socket) => {
-  console.log("a user connected");
-
-  socket.on("join-room", (roomId, userId) => {
-    socket.join(roomId);
-    socket.to(roomId).emit("user-connected", userId);
-
-    socket.on("disconnect", () => {
-      socket.to(roomId).emit("user-disconnected", userId);
-    });
-  });
-});
-
-connectDB().then(() => {
-  server.listen(port, "0.0.0.0", () => {
-    console.log(`Server is running on http://localhost:${port}`);
-  });
-});
+module.exports = { scheduleMeeting, checkMeeting };
