@@ -79,12 +79,40 @@ const NavBar = () => {
 							className="block px-4 py-2 rounded-t-2xl text-sm text-white hover:bg-white/10"
 							role="menuitem"
 						>
-							Sign in
-						</a>
-						<a
-							href="#"
-							className="block px-4 py-2 rounded-b-2xl text-sm text-white hover:bg-white/10"
-							role="menuitem"
+							<User className='h-5 w-5 text-white' />
+						</button>
+						{isMenuOpen && (
+							<div
+								ref={menuRef}
+								className='absolute right-0 mt-42 w-48 rounded-xl shadow-lg bg-[#729EA1] ring-1 ring-black ring-opacity-5 focus:outline-none'
+								role='menu'
+								aria-orientation='vertical'
+								aria-labelledby='user-menu'
+								onMouseLeave={handleMenuMouseLeave}
+							>
+								<div role='none'>
+									<a
+										href='#'
+										className='block  px-4 py-3 rounded-t-xl text-sm font-semibold text-white hover:bg-[#567f82] hover:text-white/80'
+										role='menuitem'
+									>
+										Sign in
+									</a>
+									<a
+										href='#'
+										className='block px-4 py-3 rounded-b-xl  text-sm font-semibold text-white hover:bg-[#567f82] hover:text-white/80'
+										role='menuitem'
+									>
+										Sign up
+									</a>
+								</div>
+							</div>
+						)}
+
+						{/* Mobile Menu Button */}
+						<button
+							className='md:hidden p-2 hover:bg-white/10 rounded-full transition-colors'
+							onClick={() => setIsOpen(!isOpen)}
 						>
 							Sign up
 						</a>
