@@ -1,7 +1,8 @@
 import { useState, useRef, useEffect } from "react";
 import { User, Menu, X } from "lucide-react";
 import { Link } from "react-router";
-
+import SignIn from "../Pages/signin";
+import SignUp from "../Pages/signup";
 const NavBar = () => {
 	const [isOpen, setIsOpen] = useState(false);
 	const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -74,20 +75,20 @@ const NavBar = () => {
 					onMouseLeave={handleMenuMouseLeave}
 				>
 					<div className="py-1" role="none">
-						<a
-							href="#"
+						<Link
+							to="/signin"
 							className="block px-4 py-2 rounded-t-2xl text-sm text-white hover:bg-white/10"
 							role="menuitem"
 						>
 							Sign in
-						</a>
-						<a
-							href="#"
+						</Link>
+						<Link
+							to="/signup"
 							className="block px-4 py-2 rounded-b-2xl text-sm text-white hover:bg-white/10"
 							role="menuitem"
 						>
 							Sign up
-						</a>
+						</Link>
 					</div>
 				</div>
 			)}
