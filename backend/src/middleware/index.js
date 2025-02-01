@@ -1,3 +1,3 @@
 const { securityMiddleware, requestLogger } =  require('./security');
-
-module.exports = { securityMiddleware, requestLogger };
+const authMiddleware = require('./auth');
+module.exports = { securityMiddleware, requestLogger, authMiddleware };

@@ -1,11 +1,13 @@
 const { Router } = require("express");
 const errorHandler = require("strong-error-handler");
 
-const authRoute = require("./auth.route");
+const authRoute = require("./auth.route.js");
+const forumRoute = require("./forum.route.js");
 
 const router = Router();
 
 router.use("/auth", authRoute);
+router.use("/forum", forumRoute);
 
 /**
  * GET /health
