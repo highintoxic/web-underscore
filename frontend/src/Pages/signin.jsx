@@ -8,6 +8,10 @@ export default function SignIn() {
   const [formData, setFormData] = useState({
     username: "",
     password: "",
+    userType: "user",
+    registrationNumber: "",
+    registrationYear: "",
+    councilName: ""
   });
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -26,6 +30,16 @@ export default function SignIn() {
     setError("");
 
     try {
+      // If doctor, perform fake verification
+      if (formData.userType === 'doctor') {
+        // Simulate verification delay
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        
+        if (!formData.registrationNumber || !formData.registrationYear || !formData.councilName) {
+          throw new Error("Please fill in all doctor verification fields");
+        }
+      }
+
       const response = await api.post(
         "/auth/signin",
         formData,
@@ -96,6 +110,64 @@ export default function SignIn() {
                 required
               />
             </div>
+            <div className="mb-4">
+              <label className="block text-gray-700 text-sm font-bold mb-2">
+                User Type
+              </label>
+              <select
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                name="userType"
+                value={formData.userType}
+                onChange={handleChange}
+              >
+                <option value="user">User</option>
+                <option value="doctor">Doctor</option>
+              </select>
+            </div>
+
+            {formData.userType === 'doctor' && (
+              <>
+                <div className="mb-4">
+                  <label className="block text-gray-700 text-sm font-bold mb-2">
+                    Registration Number
+                  </label>
+                  <input
+                    type="text"
+                    name="registrationNumber"
+                    value={formData.registrationNumber}
+                    onChange={handleChange}
+                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    required
+                  />
+                </div>
+                <div className="mb-4">
+                  <label className="block text-gray-700 text-sm font-bold mb-2">
+                    Registration Year
+                  </label>
+                  <input
+                    type="text"
+                    name="registrationYear"
+                    value={formData.registrationYear}
+                    onChange={handleChange}
+                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    required
+                  />
+                </div>
+                <div className="mb-4">
+                  <label className="block text-gray-700 text-sm font-bold mb-2">
+                    Council Name
+                  </label>
+                  <input
+                    type="text"
+                    name="councilName"
+                    value={formData.councilName}
+                    onChange={handleChange}
+                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    required
+                  />
+                </div>
+              </>
+            )}
             <div className="flex items-center justify-between">
               <button
                 type="submit"
