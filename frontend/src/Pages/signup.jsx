@@ -30,7 +30,7 @@ export default function SignUp() {
         setError("");
         
         try {
-            const response = await api.post("/signup", formData);
+            const response = await api.post("/auth/signup", formData);
             const { token, user } = response.data;
             
             // Store token and user data

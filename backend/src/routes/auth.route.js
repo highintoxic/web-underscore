@@ -32,19 +32,19 @@ router.post("/signup", async (req, res) => {
 		const salt = await bcrypt.genSalt(10);
 		const hashedPassword = await bcrypt.hash(password, salt);
 
-    // Generate JWT token
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-      expiresIn: "1h",
-    });
 		// Create new user
 		const user = new User({
 			username,
 			email,
 			password: hashedPassword,
 		});
-
+		
 		await user.save();
-
+		
+		// Generate JWT token
+		const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+		  expiresIn: "1h",
+		});
 
 		res.status(201).json({
 			token,
@@ -56,9 +56,11 @@ router.post("/signup", async (req, res) => {
 		});
 	} catch (error) {
 		res.status(500).json({
+
 			message: "Server error",
 			error: error.message,
 		});
+		console.log(error);
 	}
 });
 
