@@ -58,6 +58,7 @@ const HomePage = () => {
             <motion.button 
               className="bg-blue-500 hover:bg-blue-600 text-white px-8 py-3 rounded-full text-lg font-medium transition-colors"
               variants={fadeInUp}
+			  
             >
               Book Appointment
             </motion.button>
