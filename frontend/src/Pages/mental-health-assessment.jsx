@@ -27,6 +27,7 @@ export const MentalHealthAssessment = ({ saveResult }) => {
     let interpretation = ""
     if (score <= 4) {
       interpretation = "Minimal depression"
+      
     } else if (score <= 9) {
       interpretation = "Mild depression"
     } else if (score <= 14) {
