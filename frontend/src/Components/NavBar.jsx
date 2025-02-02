@@ -1,25 +1,35 @@
 import { useState, useRef, useEffect } from "react"
 import { User, Menu, X } from "lucide-react"
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 
 const NavBar = () => {
   const [user, setUser] = useState(null)
+  const [isOpen, setIsOpen] = useState(false)
+  const [isUserMenuOpen, setIsUserMenuOpen] = useState(false)
+  const menuRef = useRef(null)
+  const userMenuRef = useRef(null)
+  const navigate = useNavigate()
 
   useEffect(() => {
     const storedUser = localStorage.getItem("user")
     if (storedUser) {
       setUser(JSON.parse(storedUser))
     }
-  }, [])
 
-  const [isOpen, setIsOpen] = useState(false)
-  const [isMenuOpen, setIsMenuOpen] = useState(false)
-  const menuRef = useRef(null)
+    // Listen for login events
+    window.addEventListener("userLoggedIn", handleUserLogin)
+    return () => {
+      window.removeEventListener("userLoggedIn", handleUserLogin)
+    }
+  }, [])
 
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (menuRef.current && !menuRef.current.contains(event.target)) {
         setIsOpen(false)
+      }
+      if (userMenuRef.current && !userMenuRef.current.contains(event.target)) {
+        setIsUserMenuOpen(false)
       }
     }
 
@@ -29,12 +39,20 @@ const NavBar = () => {
     }
   }, [])
 
-  const handleButtonClick = () => {
-    setIsMenuOpen(!isOpen)
+  const handleUserLogin = (event) => {
+    setUser(JSON.parse(event.detail))
   }
 
-  const handleMenuMouseLeave = () => {
-    setIsMenuOpen(false)
+  const toggleUserMenu = () => {
+    setIsUserMenuOpen(!isUserMenuOpen)
+  }
+
+  const handleSignOut = () => {
+    localStorage.removeItem("user")
+    localStorage.removeItem("token")
+    setUser(null)
+    setIsUserMenuOpen(false)
+    navigate("/")
   }
 
   return (
@@ -62,19 +80,65 @@ const NavBar = () => {
           <Link to="/communityforum" className="text-white hover:text-white/80 transition-colors">
             Community
           </Link>
+          <Link to="/dashboard" className="text-white hover:text-white/80 transition-colors">
+            Dashboard
+          </Link>
+          <Link to="/contact" className="text-white hover:text-white/80 transition-colors">
+            Contact Us
+          </Link>
         </div>
 
         {/* Right Side Icons */}
         <div className="flex items-center space-x-4">
-          {user ? (
-            <Link to="/user-profile" className="text-white font-semibold flex items-center gap-2">
-              <User /> {user.username}
-            </Link>
-          ) : (
-            <Link to="/user-profile" className="p-2 hover:bg-white/10 rounded-full transition-colors">
+          <div className="relative" ref={userMenuRef}>
+            <button
+              onClick={toggleUserMenu}
+              className="p-2 hover:bg-white/10 rounded-full transition-colors flex items-center"
+            >
               <User className="h-5 w-5 text-white hover:cursor-pointer" />
-            </Link>
-          )}
+              {user && <span className="ml-2 text-white text-sm">{user.username}</span>}
+            </button>
+            {isUserMenuOpen && (
+              <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-10">
+                {user ? (
+                  <>
+                    <button
+                      onClick={() => {
+                        navigate("/dashboard")
+                        setIsUserMenuOpen(false)
+                      }}
+                      className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                    >
+                      Profile
+                    </button>
+                    <button
+                      onClick={handleSignOut}
+                      className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                    >
+                      Sign Out
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    <Link
+                      to="/signup"
+                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                      onClick={() => setIsUserMenuOpen(false)}
+                    >
+                      Sign Up
+                    </Link>
+                    <Link
+                      to="/signin"
+                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                      onClick={() => setIsUserMenuOpen(false)}
+                    >
+                      Sign In
+                    </Link>
+                  </>
+                )}
+              </div>
+            )}
+          </div>
 
           {/* Mobile Menu Button */}
           <button

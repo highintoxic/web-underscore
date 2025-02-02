@@ -1,12 +1,25 @@
-import { useLocation } from "react-router-dom"
+import { useEffect, useState } from "react"
+import { useNavigate } from "react-router-dom"
 import CircularProgressIndicators from "./CircularProgressIndicators"
 import LineChart from "./LineChart"
 import MetricsDisplay from "./MetricsDisplay"
 import { BaseLayout } from "../Layouts"
+import UserStaticDataForm from "./UserStaticDataForm"
 
 export default function ResultsPage() {
-  const location = useLocation()
-  const userData = location.state?.userData || {}
+  const navigate = useNavigate()
+  const [userData, setUserData] = useState(null)
+  const [showForm, setShowForm] = useState(false)
+
+  useEffect(() => {
+    const savedProfile = localStorage.getItem("userProfile")
+    if (savedProfile) {
+      setUserData(JSON.parse(savedProfile))
+    } else {
+      // If no profile exists, redirect to the form
+      navigate("/dashboard")
+    }
+  }, [navigate])
 
   // Mock metrics data (in a real application, this would be calculated based on userData)
   const metrics = {
@@ -48,44 +61,71 @@ Recommendations:
 
   const recommendations = ["Report any sudden changes", "Ensure proper hydration", "Document any symptoms or concerns"]
 
+  const handleEditProfile = () => {
+    setShowForm(true)
+  }
+
+  const handleFormSubmit = (updatedUserData) => {
+    setUserData(updatedUserData)
+    localStorage.setItem("userProfile", JSON.stringify(updatedUserData))
+    setShowForm(false)
+  }
+
+  if (!userData) {
+    return <div>Loading...</div>
+  }
+
   return (
     <BaseLayout>
-    <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-8 text-center text-indigo-600">Health Metrics Results</h1>
+      <div className="container mx-auto px-4 py-8 mt-10">
+        {showForm ? (
+          <UserStaticDataForm initialData={userData} onSubmit={handleFormSubmit} />
+        ) : (
+          <>
+            <div className="flex justify-between items-center mb-8">
+              <h1 className="text-3xl font-bold text-indigo-600">Health Metrics Results</h1>
+              <button
+                onClick={handleEditProfile}
+                className="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition-colors hover:cursor-pointer"
+              >
+                Edit Profile
+              </button>
+            </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
-        <div className="bg-white p-6 rounded-xl shadow-lg">
-          <h2 className="text-2xl font-semibold mb-4">Current Metrics</h2>
-          <CircularProgressIndicators metrics={metrics} />
-        </div>
-        <div className="bg-white p-6 rounded-xl shadow-lg">
-          <h2 className="text-2xl font-semibold mb-4">Historical Trends</h2>
-          <LineChart historicalData={historicalData} />
-        </div>
-      </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+              <div className="bg-white p-6 rounded-xl shadow-lg">
+                <h2 className="text-2xl font-semibold mb-4">Current Metrics</h2>
+                <CircularProgressIndicators metrics={metrics} />
+              </div>
+              <div className="bg-white p-6 rounded-xl shadow-lg">
+                <h2 className="text-2xl font-semibold mb-4">Historical Trends</h2>
+                <LineChart historicalData={historicalData} />
+              </div>
+            </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
-        <div className="bg-white p-6 rounded-xl shadow-lg">
-          <h2 className="text-xl font-semibold mb-4">Metrics Summary</h2>
-          <MetricsDisplay metrics={metrics} />
-        </div>
-        <div className="bg-white p-6 rounded-xl shadow-lg">
-          <h2 className="text-xl font-semibold mb-4">Analysis</h2>
-          <pre className="whitespace-pre-wrap text-sm">{analysis}</pre>
-        </div>
-      </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+              <div className="bg-white p-6 rounded-xl shadow-lg">
+                <h2 className="text-xl font-semibold mb-4">Metrics Summary</h2>
+                <MetricsDisplay metrics={metrics} />
+              </div>
+              <div className="bg-white p-6 rounded-xl shadow-lg">
+                <h2 className="text-xl font-semibold mb-4">Analysis</h2>
+                <pre className="whitespace-pre-wrap text-sm">{analysis}</pre>
+              </div>
+            </div>
 
-      <div className="bg-white p-6 rounded-xl shadow-lg">
-        <h2 className="text-xl font-semibold mb-4">Recommendations</h2>
-        <ul className="list-disc pl-5 space-y-2">
-          {recommendations.map((rec, index) => (
-            <li key={index}>{rec}</li>
-          ))}
-        </ul>
+            <div className="bg-white p-6 rounded-xl shadow-lg">
+              <h2 className="text-xl font-semibold mb-4">Recommendations</h2>
+              <ul className="list-disc pl-5 space-y-2">
+                {recommendations.map((rec, index) => (
+                  <li key={index}>{rec}</li>
+                ))}
+              </ul>
+            </div>
+          </>
+        )}
       </div>
-    </div>
     </BaseLayout>
-    
   )
 }
 

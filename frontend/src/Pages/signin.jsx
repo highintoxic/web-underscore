@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-
+import axios from "axios";
 import BaseLayout from "../Layouts/BaseLayout";
 import api from "../utils/api";
+
 export default function SignIn() {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
@@ -55,7 +56,9 @@ export default function SignIn() {
       // Store auth data
       localStorage.setItem("token", token);
       localStorage.setItem("user", JSON.stringify(user));
-
+      localStorage.setItem("username", user.username) 
+      
+      window.dispatchEvent(new CustomEvent("userLoggedIn", { detail: user.username }))
       // Navigate to encourage page
       navigate("/");
     } catch (error) {

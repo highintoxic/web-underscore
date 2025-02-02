@@ -8,4 +8,6 @@ import CommunityForum from "./community";
 import TravelingDoctors from "./traveling-doctors";
 import UserProfilePage from "./UserProfilePage";
 import ResultsPage from "./ResultsPage";
-export { Home, SignIn, SignUp, NotFound,DiseaseSlider,HealthCalculator,CommunityForum,TravelingDoctors,UserProfilePage,ResultsPage};
+import Dashboard from "./Dashboard";
+import ContactPage from "./contact";
+export { Home, SignIn, SignUp, NotFound,DiseaseSlider,HealthCalculator,CommunityForum,TravelingDoctors,UserProfilePage,ResultsPage,Dashboard,ContactPage};

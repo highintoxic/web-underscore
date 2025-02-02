@@ -220,7 +220,7 @@ export default function TravelingDoctors() {
       </div>
     </div>
     </BaseLayout>
-    
+
   )
 }
 

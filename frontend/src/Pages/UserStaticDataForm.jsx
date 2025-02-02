@@ -1,16 +1,28 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 
-export default function UserStaticDataForm() {
+export default function UserStaticDataForm({ initialData, onSubmit }) {
   const navigate = useNavigate()
-  const [userData, setUserData] = useState({
-    age: "",
-    gender: "",
-    weight: "",
-    height: "",
-    lifestyle: "",
-    medicalHistory: [],
-  })
+  const [userData, setUserData] = useState(
+    initialData || {
+      age: "",
+      gender: "",
+      weight: "",
+      height: "",
+      lifestyle: "",
+      medicalHistory: [],
+    },
+  )
+
+  useEffect(() => {
+    if (!initialData) {
+      const savedProfile = localStorage.getItem("userProfile")
+      if (savedProfile) {
+        // If a profile exists, redirect to the results page
+        navigate("/results")
+      }
+    }
+  }, [navigate, initialData])
 
   const handleInputChange = (e) => {
     const { name, value } = e.target
@@ -28,9 +40,14 @@ export default function UserStaticDataForm() {
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    console.log(userData)
-    // Navigate to the results page
-    navigate("/results", { state: { userData } })
+    if (onSubmit) {
+      onSubmit(userData)
+    } else {
+      // Save the user data to localStorage
+      localStorage.setItem("userProfile", JSON.stringify(userData))
+      // Navigate to the results page
+      navigate("/results")
+    }
   }
 
   return (
@@ -146,7 +163,7 @@ export default function UserStaticDataForm() {
             type="submit"
             className="w-full py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150 ease-in-out"
           >
-            Save Profile
+            {initialData ? "Update Profile" : "Save Profile"}
           </button>
         </div>
       </form>

@@ -55,7 +55,7 @@ const EnhancedDiseaseSlider = () => {
               transition={{ duration: 0.3 }}
             >
               {/* Title */}
-              <h1 className="text-4xl md:text-5xl font-bold text-emerald-600 text-center mb-8">{disease.name}</h1>
+              <h1 className="text-4xl md:text-5xl font-bold text-blue-500 text-center mb-8">{disease.name}</h1>
 
               {/* Content */}
               <div className="grid md:grid-cols-2 gap-6 text-gray-700 mb-12">
