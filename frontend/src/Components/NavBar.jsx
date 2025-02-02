@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react"
 import { User, Menu, X } from "lucide-react"
 import { Link, useNavigate } from "react-router-dom"
-
+import logo from "../assets/WEB__Pulse360-removebg-preview.png"
 const NavBar = () => {
   const [user, setUser] = useState(null)
   const [isOpen, setIsOpen] = useState(false)
@@ -37,7 +37,13 @@ const NavBar = () => {
     return () => {
       document.removeEventListener("mousedown", handleClickOutside)
     }
+    
   }, [])
+
+  useEffect(()=>{
+    document.getElementById("logo").src = logo 
+      
+  })
 
   const handleUserLogin = (event) => {
     setUser(JSON.parse(event.detail))
@@ -58,11 +64,12 @@ const NavBar = () => {
   return (
     <nav className="fixed top-0 left-0 right-0 w-full bg-[#3D52D5] border-b rounded-none backdrop-blur-lg border-white/10 shadow-lg z-50">
       <div className="px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16">
-        {/* Logo */}
-        <Link to="/" className="text-white font-semibold text-xl">
+        <div className="flex flex-row items-center">
+          <img id="logo" className="h-25"></img>
+          <Link to="/" className="text-white font-semibold text-xl">
         Pulse360
         </Link>
-
+        </div>
         {/* Desktop Navigation */}
         <div className="hidden md:flex items-center space-x-8">
           <Link to="/" className="text-white hover:text-white/80 transition-colors">
