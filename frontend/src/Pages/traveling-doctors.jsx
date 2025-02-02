@@ -142,7 +142,7 @@ export default function TravelingDoctors() {
 
   return (
     <BaseLayout>
-    <div className="container mx-auto p-4 mt-20">
+    <div className="container min-h-screen mx-auto p-4 mt-20">
       <div className="w-full max-w-md mx-auto bg-white shadow-md rounded-lg overflow-hidden">
         <div className="p-6">
           <h2 className="text-2xl font-bold mb-2">Book a Traveling Doctor</h2>

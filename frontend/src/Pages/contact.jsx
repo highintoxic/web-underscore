@@ -41,7 +41,7 @@ const ContactPage = () => {
               <div className="glass-effect p-8 rounded-lg shadow-md text-center card-hover relative z-10">
                 <div className="relative">
                   <div className="w-16 h-16 bg-[rgba(0,212,142,0.1)] rounded-full flex items-center justify-center mx-auto mb-4">
-                    <item.icon className="w-8 h-8 text-[rgb(0,212,142)] icon-hover" />
+                    <item.icon className="w-8 h-8 text-blue-400 icon-hover" />
                   </div>
                   <div className="absolute top-0 left-1/2 -translate-x-1/2 w-16 h-16 rounded-full border-2 border-[rgb(0,212,142)] animate-pulse-ring"></div>
                 </div>
@@ -69,7 +69,7 @@ const ContactPage = () => {
               ].map((item, index) => (
                 <div key={index} className="flex flex-col items-center group animate-slide-up" style={{ animationDelay: `${index * 200}ms` }}>
                   <div className="relative">
-                    <item.icon className="w-12 h-12 text-[rgb(0,212,142)] transform group-hover:scale-110 group-hover:rotate-12 transition-all duration-300" />
+                    <item.icon className="w-12 h-12 text-blue-400 transform group-hover:scale-110 group-hover:rotate-12 transition-all duration-300" />
                     <div className="absolute inset-0 bg-[rgb(0,212,142)] opacity-20 blur-xl group-hover:opacity-30 transition-opacity duration-300"></div>
                   </div>
                   <h3 className="text-lg font-semibold mb-2 mt-4 gradient-text">{item.title}</h3>

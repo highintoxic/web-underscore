@@ -139,7 +139,7 @@ const HomePage = () => {
                     bounce: 0.4,
                   }}
                 >
-                  Your Health,{" "}
+                  Empowering Health,{" "}
                   <motion.span
                     className="inline-block text-blue-400"
                     animate={{
@@ -151,18 +151,18 @@ const HomePage = () => {
                       ease: "easeInOut",
                     }}
                   >
-                    Our Priority
+                    Elevating Lives
                   </motion.span>
                 </motion.h1>
               </motion.div>
 
               <motion.p
-                className="text-xl md:text-2xl mb-8"
+                className="text-xl md:text-2xl mb-8 "
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.5, duration: 0.8 }}
               >
-                Advanced medical care with a personal touch
+                Delivering innovative, personalized healthcare solutions to empower your well-being and elevate your quality of life!
               </motion.p>
 
               <motion.button

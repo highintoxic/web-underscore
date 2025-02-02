@@ -4,10 +4,10 @@ import { BaseLayout } from '../Layouts';
 
 const TeamMemberCard = ({ name, role, image, description, Icon }) => {
   return (
-    <BaseLayout>
+    
     <div className="group animate-slide-up">
       <div className="relative">
-        <div className="absolute inset-0 bg-[rgb(0,212,142)] rounded-xl transform rotate-6 group-hover:rotate-12 transition-all duration-300"></div>
+        <div className="absolute inset-0 bg-blue-400 rounded-xl transform rotate-6 group-hover:rotate-12 transition-all duration-300"></div>
         <div className="relative bg-white p-8 rounded-xl shadow-md group-hover:shadow-xl transition-all duration-300">
           <div className="relative mb-6">
             <img
@@ -39,7 +39,7 @@ const TeamMemberCard = ({ name, role, image, description, Icon }) => {
         </div>
       </div>
     </div>
-    </BaseLayout>
+
     
   );
 };
