@@ -60,7 +60,7 @@ const NavBar = () => {
       <div className="px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16">
         {/* Logo */}
         <Link to="/" className="text-white font-semibold text-xl">
-          . /
+        Pulse360
         </Link>
 
         {/* Desktop Navigation */}
@@ -96,7 +96,7 @@ const NavBar = () => {
               className="p-2 hover:bg-white/10 rounded-full transition-colors flex items-center"
             >
               <User className="h-5 w-5 text-white hover:cursor-pointer" />
-              {user && <span className="ml-2 text-white text-sm">{user.username}</span>}
+              {user && <span className="ml-2 text-white text-sm hover:cursor-pointer  ">{user.username}</span>}
             </button>
             {isUserMenuOpen && (
               <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-10">
@@ -169,6 +169,12 @@ const NavBar = () => {
             <Link to="/communityforum" className="text-white hover:text-white/80 transition-colors">
               Community
             </Link>
+            <Link to="/dashboard" className="text-white hover:text-white/80 transition-colors">
+            Dashboard
+          </Link>
+          <Link to="/contact" className="text-white hover:text-white/80 transition-colors">
+            Contact Us
+          </Link>
           </div>
         </div>
       )}

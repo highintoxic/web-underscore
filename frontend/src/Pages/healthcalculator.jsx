@@ -17,18 +17,15 @@ const HealthCalculator = () => {
   const [result, setResult] = useState(null)
   const [healthData, setHealthData] = useState([])
 
-  // Load data from cookies on initial render
   useEffect(() => {
     const cookieData = Cookies.get("healthData")
     if (cookieData) {
       try {
         const parsedData = JSON.parse(cookieData)
         setHealthData(parsedData)
-        // Sync with localStorage for backup
         localStorage.setItem("healthData", cookieData)
       } catch (error) {
         console.error("Error parsing cookie data:", error)
-        // Fallback to localStorage if cookie parsing fails
         const localData = localStorage.getItem("healthData")
         if (localData) {
           try {
@@ -44,11 +41,8 @@ const HealthCalculator = () => {
   const saveResult = (type, value) => {
     const newData = [...healthData, { type, value, date: new Date().toISOString() }]
     setHealthData(newData)
-
-    // Save to both cookies and localStorage
     try {
       const jsonData = JSON.stringify(newData)
-      // Set cookie with 30 days expiration
       Cookies.set("healthData", jsonData, { expires: 30, secure: true, sameSite: "strict" })
       localStorage.setItem("healthData", jsonData)
     } catch (error) {
@@ -56,7 +50,6 @@ const HealthCalculator = () => {
     }
   }
 
-  // Clear all stored data
   const clearStoredData = () => {
     setHealthData([])
     Cookies.remove("healthData")
@@ -128,31 +121,39 @@ const HealthCalculator = () => {
 
   return (
     <BaseLayout>
-      <div className="w-full min-h-screen bg-gray-100 p-4 sm:p-6 mt-15">
-        <div className="w-full max-w-7xl mx-auto">
-          <div className="flex justify-between items-center mb-4 sm:mb-6 px-2">
-            <h1 className="text-2xl sm:text-3xl font-bold text-blue-600">Multi-Functional Health Calculator</h1>
+      <div className="min-h-screen bg-gray-100 px-2 sm:px-4 md:px-6 lg:px-8 py-4 md:py-6 mt-16 md:mt-20">
+        <div className="max-w-7xl mx-auto">
+          {/* Header Section */}
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-4 sm:mb-6">
+            <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-blue-600">
+              Multi-Functional Health Calculator
+            </h1>
             <button
               onClick={clearStoredData}
-              className="text-sm px-3 py-1 text-red-600 hover:text-red-700 border border-red-600 rounded hover:bg-red-50 transition-colors hover:cursor-pointer "
+              className="text-xs sm:text-sm px-2 sm:px-3 py-1 text-red-600 hover:text-red-700 border border-red-600 rounded hover:bg-red-50 transition-colors"
             >
               Clear All Data
             </button>
           </div>
 
-          <div className="space-y-6">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
-              <div className="bg-white rounded-lg shadow-sm p-4 sm:p-6">
-                <div className="space-y-4">
+          <div className="space-y-4 md:space-y-6">
+            {/* Main Grid Layout */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
+              {/* Calculator Panel */}
+              <div className="bg-white rounded-lg shadow-sm p-3 sm:p-4 md:p-6">
+                <div className="space-y-3 sm:space-y-4">
+                  {/* Calculator Selection */}
                   <div>
-                    <label className="block text-base sm:text-lg font-medium mb-2">Select Calculator:</label>
+                    <label className="block text-sm sm:text-base lg:text-lg font-medium mb-1 sm:mb-2">
+                      Select Calculator:
+                    </label>
                     <select
                       value={selectedCalculator}
                       onChange={(e) => {
                         setSelectedCalculator(e.target.value)
                         setResult(null)
                       }}
-                      className="w-full p-2 sm:p-3 border rounded-md text-sm sm:text-base hover:cursor-pointer focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      className="w-full p-2 sm:p-3 border rounded-md text-xs sm:text-sm md:text-base focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                     >
                       <option value="">-- Select --</option>
                       <option value="BMI">BMI Calculator</option>
@@ -164,109 +165,126 @@ const HealthCalculator = () => {
                     </select>
                   </div>
 
-                  <div className="space-y-4">
+                  {/* Input Fields */}
+                  <div className="space-y-3 sm:space-y-4">
                     {(selectedCalculator === "BMI" ||
                       selectedCalculator === "BMR" ||
-                      selectedCalculator === "DiabetesRisk" || selectedCalculator=="BodyFat") && (
-                      <>
+                      selectedCalculator === "DiabetesRisk" ||
+                      selectedCalculator === "BodyFat") && (
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                         <div>
-                          <label className="block text-base sm:text-lg font-medium mb-2">Weight (kg):</label>
+                          <label className="block text-sm sm:text-base lg:text-lg font-medium mb-1 sm:mb-2">
+                            Weight (kg):
+                          </label>
                           <input
                             type="number"
                             value={weight}
                             onChange={(e) => setWeight(e.target.value)}
-                            className="w-full p-2 sm:p-3 border rounded-md text-sm sm:text-base focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                            className="w-full p-2 sm:p-3 border rounded-md text-xs sm:text-sm md:text-base focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                           />
                         </div>
                         <div>
-                          <label className="block text-base sm:text-lg font-medium mb-2">Height (m):</label>
+                          <label className="block text-sm sm:text-base lg:text-lg font-medium mb-1 sm:mb-2">
+                            Height (m):
+                          </label>
                           <input
                             type="number"
                             value={height}
                             onChange={(e) => setHeight(e.target.value)}
-                            className="w-full p-2 sm:p-3 border rounded-md text-sm sm:text-base focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                            className="w-full p-2 sm:p-3 border rounded-md text-xs sm:text-sm md:text-base focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                           />
                         </div>
-                      </>
-                    )}
-
-                    {(selectedCalculator === "BMR" || selectedCalculator === "DiabetesRisk") && (
-                      <div>
-                        <label className="block text-base sm:text-lg font-medium mb-2">Age:</label>
-                        <input
-                          type="number"
-                          value={age}
-                          onChange={(e) => setAge(e.target.value)}
-                          className="w-full p-2 sm:p-3 border rounded-md text-sm sm:text-base focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                        />
                       </div>
                     )}
 
-                    {selectedCalculator === "BMR" && (
-                      <div>
-                        <label className="block text-base sm:text-lg font-medium mb-2">Gender:</label>
-                        <select
-                          value={gender}
-                          onChange={(e) => setGender(e.target.value)}
-                          className="w-full p-2 sm:p-3 border rounded-md text-sm sm:text-base focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                        >
-                          <option value="male">Male</option>
-                          <option value="female">Female</option>
-                        </select>
+                    {(selectedCalculator === "BMR" || selectedCalculator === "DiabetesRisk") && (
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+                        <div>
+                          <label className="block text-sm sm:text-base lg:text-lg font-medium mb-1 sm:mb-2">
+                            Age:
+                          </label>
+                          <input
+                            type="number"
+                            value={age}
+                            onChange={(e) => setAge(e.target.value)}
+                            className="w-full p-2 sm:p-3 border rounded-md text-xs sm:text-sm md:text-base focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                          />
+                        </div>
+                        {selectedCalculator === "BMR" && (
+                          <div>
+                            <label className="block text-sm sm:text-base lg:text-lg font-medium mb-1 sm:mb-2">
+                              Gender:
+                            </label>
+                            <select
+                              value={gender}
+                              onChange={(e) => setGender(e.target.value)}
+                              className="w-full p-2 sm:p-3 border rounded-md text-xs sm:text-sm md:text-base focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                            >
+                              <option value="male">Male</option>
+                              <option value="female">Female</option>
+                            </select>
+                          </div>
+                        )}
                       </div>
                     )}
 
                     {selectedCalculator === "BodyFat" && (
                       <div>
-                        <label className="block text-base sm:text-lg font-medium mb-2">Waist Circumference (cm):</label>
+                        <label className="block text-sm sm:text-base lg:text-lg font-medium mb-1 sm:mb-2">
+                          Waist Circumference (cm):
+                        </label>
                         <input
                           type="number"
                           value={waist}
                           onChange={(e) => setWaist(e.target.value)}
-                          className="w-full p-2 sm:p-3 border rounded-md text-sm sm:text-base focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                          className="w-full p-2 sm:p-3 border rounded-md text-xs sm:text-sm md:text-base focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                         />
                       </div>
                     )}
                   </div>
 
+                  {/* Special Calculators */}
                   {selectedCalculator === "WaterIntake" && <WaterIntakeCalculator saveResult={saveResult} />}
-
                   {selectedCalculator === "MentalHealth" && <MentalHealthAssessment saveResult={saveResult} />}
 
+                  {/* Calculate Button */}
                   {selectedCalculator &&
                     selectedCalculator !== "WaterIntake" &&
                     selectedCalculator !== "MentalHealth" && (
                       <button
                         onClick={handleCalculate}
-                        className="w-full sm:w-auto bg-blue-500 text-white px-6 py-2 sm:py-3 rounded-md text-sm sm:text-base font-medium hover:bg-blue-600 transition-colors hover:cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                        className="w-full sm:w-auto bg-blue-500 text-white px-4 sm:px-6 py-2 sm:py-3 rounded-md text-xs sm:text-sm md:text-base font-medium hover:bg-blue-600 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
                       >
                         Calculate
                       </button>
                     )}
 
+                  {/* Results Section */}
                   {result && (
-                    <div className="mt-6 p-4 bg-gray-50 rounded-lg border">
-                      <h2 className="text-lg sm:text-xl font-semibold mb-2">Result:</h2>
-                      <p className="text-base sm:text-lg">{result}</p>
+                    <div className="mt-4 sm:mt-6 p-3 sm:p-4 bg-gray-50 rounded-lg border">
+                      <h2 className="text-base sm:text-lg lg:text-xl font-semibold mb-2">Result:</h2>
+                      <p className="text-sm sm:text-base lg:text-lg">{result}</p>
                     </div>
                   )}
                 </div>
               </div>
 
-              <div className="space-y-6">
-                <div className="bg-white rounded-lg shadow-sm p-4 sm:p-6">
+              {/* Charts and Recommendations */}
+              <div className="space-y-4 md:space-y-6">
+                <div className="bg-white rounded-lg shadow-sm p-3 sm:p-4 md:p-6">
                   <HealthChart
                     data={healthData.filter((item) => item.type === selectedCalculator)}
                     type={selectedCalculator}
                   />
                 </div>
-                <div className="bg-white rounded-lg shadow-sm p-4 sm:p-6">
+                <div className="bg-white rounded-lg shadow-sm p-3 sm:p-4 md:p-6">
                   <HealthRecommendations result={result} selectedCalculator={selectedCalculator} />
                 </div>
               </div>
             </div>
 
-            <div className="bg-white rounded-lg shadow-sm p-4 sm:p-6">
+            {/* Progress Tracker */}
+            <div className="bg-white rounded-lg shadow-sm p-3 sm:p-4 md:p-6">
               <ProgressTracker data={healthData} />
             </div>
           </div>
@@ -277,4 +295,3 @@ const HealthCalculator = () => {
 }
 
 export default HealthCalculator
-

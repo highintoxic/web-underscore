@@ -101,7 +101,9 @@ const HomePage = () => {
   const handleBookAppointment = () => {
     navigate("/doctor")
   }
-
+  const handlecontactus=()=>{
+    navigate("/contact")
+  }
   return (
     <BaseLayout>
       <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white">
@@ -308,7 +310,7 @@ const HomePage = () => {
                   onClick={prevFact}
                   className="absolute left-0 z-10 p-2 text-gray-600 hover:text-gray-800 transition-colors"
                 >
-                  <ChevronLeft size={24} />
+                  <ChevronLeft size={24} className="hover:cursor-pointer" />
                 </button>
                 <AnimatePresence mode="wait">
                   <motion.div
@@ -329,14 +331,14 @@ const HomePage = () => {
                   onClick={nextFact}
                   className="absolute right-0 z-10 p-2 text-gray-600 hover:text-gray-800 transition-colors"
                 >
-                  <ChevronRight size={24} />
+                  <ChevronRight size={24} className="hover:cursor-pointer" />
                 </button>
                 <div className="absolute right-[-40px] top-1/2 -translate-y-1/2 flex flex-col gap-2">
                   {funFacts.map((_, index) => (
                     <button
                       key={index}
                       onClick={() => setCurrentFactIndex(index)}
-                      className={`w-2 h-2 rounded-full transition-colors ${
+                      className={`w-2 h-2 rounded-full transition-colors hover:cursor-pointer ${
                         index === currentFactIndex ? "bg-[#00FF7F]" : "bg-gray-300"
                       }`}
                     />
@@ -363,9 +365,10 @@ const HomePage = () => {
               Schedule your consultation today and take the first step towards better health.
             </motion.p>
             <motion.button
-              className="bg-white text-blue-600 px-8 py-3 rounded-full text-lg font-medium hover:bg-blue-50 transition-colors"
+              className="bg-white text-blue-600 px-8 py-3 rounded-full text-lg font-medium hover:bg-blue-50 transition-colors hover:cursor-pointer"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
+              onClick={handlecontactus}
             >
               Contact Us
             </motion.button>

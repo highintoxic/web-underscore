@@ -9,27 +9,27 @@ import { BaseLayout } from '../Layouts';
 const ContactPage = () => {
   return (
     <BaseLayout>
-    <div className="min-h-screen  overflow-hidden">
+    <div className="min-h-screen overflow-hidden">
       {/* Hero Section with animated gradient background */}
-      <div className="relative animate-gradient-x bg-gradient-to-r from-blue-500 to-blue-600 text-white pb-40 pt-32">
+      <div className="relative animate-gradient-x bg-white text-white pb-40 pt-32">
         <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1557683316-973673baf926?auto=format&fit=crop&q=80')] opacity-10 mix-blend-overlay"></div>
         <div className="container mx-auto px-4 relative">
-          <h1 className="text-6xl md:text-7xl font-bold text-center mb-8 animate-float ">
+          <h1 className="text-6xl md:text-7xl font-bold text-center mb-8 animate-float text-black">
             Get in Touch
           </h1>
-          <p className="text-2xl text-center max-w-3xl mx-auto opacity-90 mb-20">
+          <p className="text-2xl text-center max-w-3xl mx-auto opacity-90 mb-20 text-black">
             We're here to help and answer any questions you might have. We look forward to hearing from you!
           </p>
           <div className="absolute -bottom-40 left-1/2 transform -translate-x-1/2">
             <div className="w-32 h-32 rounded-full bg-white shadow-lg flex items-center justify-center animate-bounce">
-              <MessageSquare className="w-16 h-16 text-[rgb(0,212,142)]" />
+              <MessageSquare className="w-16 h-16 text-black" />
             </div>
           </div>
         </div>
       </div>
 
       {/* Contact Information */}
-      <div className="container mx-auto px-4 pt-56 pb-16">
+      <div className="container mx-auto px-4 pt-56 pb-16 ">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
           {[
             { icon: Mail, title: 'Email Us', lines: ['deepdblm@outlook.com', 'u23ai052@coed.svnit.ac.in'] },
