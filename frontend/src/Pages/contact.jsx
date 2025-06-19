@@ -9,7 +9,7 @@ import { BaseLayout } from '../Layouts';
 const ContactPage = () => {
   return (
     <BaseLayout>
-    <div className="min-h-screen overflow-hidden">
+    <div className="min-h-screen overflow-hidden bg-gray-100">
       {/* Hero Section with animated gradient background */}
       <div className="relative animate-gradient-x bg-white text-white pb-40 pt-32">
         <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1557683316-973673baf926?auto=format&fit=crop&q=80')] opacity-10 mix-blend-overlay"></div>
